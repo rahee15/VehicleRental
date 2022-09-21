@@ -7,6 +7,8 @@ import com.rahi.VehicalRental.type.VehicleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class BranchServiceImpl implements BranchService {
 
@@ -19,5 +21,10 @@ public class BranchServiceImpl implements BranchService {
                 .branchType(branchType)
                 .vehicleType(vehicleType)
                 .build());
+    }
+
+    @Override
+    public Optional<Branch> findBranchByBranchTypeAndVehicleType(BranchType branchType, VehicleType vehicleType) {
+        return branchRepository.findByBranchTypeAndVehicleType(branchType, vehicleType);
     }
 }
