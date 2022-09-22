@@ -18,6 +18,7 @@ public class ExecutorServiceImpl {
   public void execute() {
 
     try {
+      // Reading file using given filePath
       File file = new File(filePath);
       InputStream inputStream = new FileInputStream(file);
 
@@ -25,6 +26,8 @@ public class ExecutorServiceImpl {
         String command;
         while ((command = br.readLine()) != null) {
           System.out.println(command);
+
+          // Executing each command
           commandExecutorService.execute(command.split(" "));
         }
       }

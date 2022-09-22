@@ -6,6 +6,7 @@ import com.rahi.VehicalRental.type.VehicleModelType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ public class DisplayVehiclesExecution implements CommandExecutionStrategyService
   @Autowired private BookingService bookingService;
 
   @Override
+  @Transactional
   public void executeCommand(String[] operands) {
     try {
       BranchType branchType = BranchType.valueOf(operands[1]);
