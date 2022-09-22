@@ -1,5 +1,10 @@
 # VehicleRental
 
+##Execution Steps
+- Setup Java11 in machine
+- go to root directory of project
+- java -jar ./target/VehicalRental-0.0.1-SNAPSHOT.jar -D"app.test.file.path"=./testCase/sampleInput.txt
+
 Features:
 - Rental service has multiple branches throughout the city.
 - Each branch has a limited number of different kinds of vehicles.
