@@ -1,6 +1,6 @@
 package com.rahi.VehicalRental.model.entity;
 
-import com.rahi.VehicalRental.model.entity.base.BaseAuditableUUID;
+import com.rahi.VehicalRental.model.entity.base.BaseUUID;
 import com.rahi.VehicalRental.type.VehicleModelType;
 import lombok.*;
 
@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Table(name = "branch_vehicle")
 @ToString(callSuper = true)
 @Entity(name = "branch_vehicle")
-public class BranchVehicle extends BaseAuditableUUID implements Serializable {
+public class BranchVehicle extends BaseUUID implements Serializable {
 
   @ManyToOne private Branch branch;
 

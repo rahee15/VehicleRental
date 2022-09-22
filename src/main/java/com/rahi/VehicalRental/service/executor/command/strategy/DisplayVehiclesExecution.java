@@ -6,6 +6,7 @@ import com.rahi.VehicalRental.type.VehicleModelType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,18 +16,24 @@ public class DisplayVehiclesExecution implements CommandExecutionStrategyService
   @Autowired private BookingService bookingService;
 
   @Override
+  @Transactional
   public void executeCommand(String[] operands) {
-    BranchType branchType = BranchType.valueOf(operands[1]);
+    try {
+      BranchType branchType = BranchType.valueOf(operands[1]);
 
-    int bookingStartTime = Integer.parseInt(operands[2]);
+      int bookingStartTime = Integer.parseInt(operands[2]);
 
-    int bookingEndTime = Integer.parseInt(operands[3]);
+      int bookingEndTime = Integer.parseInt(operands[3]);
 
-    List<VehicleModelType> vehicles =
-        bookingService.getAvailableVehicles(branchType, bookingStartTime, bookingEndTime);
+      List<VehicleModelType> vehicles =
+          bookingService.getAvailableVehicles(branchType, bookingStartTime, bookingEndTime);
 
-    List<String> vehicleModels = vehicles.stream().map(Enum::toString).collect(Collectors.toList());
+      List<String> vehicleModels =
+          vehicles.stream().map(Enum::toString).collect(Collectors.toList());
 
-    System.out.println(String.join(",", vehicleModels));
+      System.out.println(String.join(",", vehicleModels));
+    } catch (Exception ex) {
+      System.out.println(-1);
+    }
   }
 }

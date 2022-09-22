@@ -18,14 +18,11 @@ public class CommandExecutorServiceImpl implements CommandExecutorService {
 
   @Override
   public void execute(String[] splitedCommand) {
-    try {
-      this.defineStrategy(splitedCommand[0]).executeCommand(splitedCommand);
-    } catch (Exception ex) {
-      System.out.println(-1);
-    }
+    // Executing the strategy based in command
+    this.defineStrategy(splitedCommand[0]).executeCommand(splitedCommand);
   }
 
-  // Defining Strategy for command Execution
+  // Defining Strategy for which command Execution
   private CommandExecutionStrategyService defineStrategy(String operationValue) {
     OperationType operationType = OperationType.valueOf(operationValue);
     switch (operationType) {

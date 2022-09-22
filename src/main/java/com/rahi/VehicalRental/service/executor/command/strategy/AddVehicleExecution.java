@@ -9,38 +9,43 @@ import com.rahi.VehicalRental.type.VehicleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 public class AddVehicleExecution implements CommandExecutionStrategyService {
 
-    @Autowired
-    private BranchService branchService;
+  @Autowired private BranchService branchService;
 
-    @Autowired
-    private BranchVehicleService branchVehicleService;
+  @Autowired private BranchVehicleService branchVehicleService;
 
-    @Override
-    public void executeCommand(String[] operands) {
-        try {
-            BranchType branchType = BranchType.valueOf(operands[1]);
-            VehicleType vehicleType = VehicleType.valueOf(operands[2]);
+  @Override
+  @Transactional
+  public void executeCommand(String[] operands) {
+    try {
+      // Fetching BranchType And VehicleType from command
+      BranchType branchType = BranchType.valueOf(operands[1]);
+      VehicleType vehicleType = VehicleType.valueOf(operands[2]);
 
-            Optional<Branch> branchOptional = branchService
-                    .findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
+      // Getting branch by branchType And VehicleType
+      Optional<Branch> branchOptional =
+          branchService.findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
 
-            if (branchOptional.isEmpty()) {
-                throw new RuntimeException("VehicleType is not supported for given branch");
-            } else {
-                branchVehicleService.createBranchVehicle(branchOptional.get(),
-                        VehicleModelType.valueOf(operands[3]),
-                        Double.parseDouble(operands[4]));
-            }
+      // Checking if branch exists or not
+      if (branchOptional.isEmpty()) {
+        throw new RuntimeException("VehicleType is not supported for given branch");
+      } else {
 
-            System.out.println("TRUE");
-        } catch (Exception ex) {
-            System.out.println("FALSE");
-        }
+        // Adding entry in BranchVehicle Table
+        branchVehicleService.createBranchVehicle(
+            branchOptional.get(),
+            VehicleModelType.valueOf(operands[3]),
+            Double.parseDouble(operands[4]));
+      }
 
+      System.out.println("TRUE");
+    } catch (Exception ex) {
+      System.out.println("FALSE");
     }
+  }
 }

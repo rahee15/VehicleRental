@@ -15,12 +15,12 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = false)
 @MappedSuperclass
 @AllArgsConstructor
-public class BaseAuditableUUID extends BaseAuditable implements Serializable {
+public class BaseUUID implements Serializable {
   @Id
   @Type(type = "uuid-char")
   private UUID id;
 
-  public BaseAuditableUUID() {
+  public BaseUUID() {
     this.id = UUIDUtility.generate();
   }
 }

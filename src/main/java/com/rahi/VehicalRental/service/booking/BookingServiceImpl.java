@@ -4,7 +4,6 @@ import com.rahi.VehicalRental.model.entity.Booking;
 import com.rahi.VehicalRental.model.entity.Branch;
 import com.rahi.VehicalRental.model.entity.BranchVehicle;
 import com.rahi.VehicalRental.repository.booking.BookingRepository;
-import com.rahi.VehicalRental.service.branch.vehicle.BranchVehicleService;
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleModelType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
 
   @Autowired private BookingRepository bookingRepository;
-
-  @Autowired private BranchVehicleService branchVehicleService;
 
   @Override
   public Booking createBooking(
@@ -40,7 +37,6 @@ public class BookingServiceImpl implements BookingService {
   @Override
   public List<VehicleModelType> getAvailableVehicles(
       BranchType branchType, int bookingStartTime, int bookingEndTime) {
-    return bookingRepository.getAvailableVehicles(
-        branchType, bookingStartTime, bookingEndTime);
+    return bookingRepository.getAvailableVehicles(branchType, bookingStartTime, bookingEndTime);
   }
 }

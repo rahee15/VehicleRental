@@ -1,6 +1,6 @@
 package com.rahi.VehicalRental.model.entity;
 
-import com.rahi.VehicalRental.model.entity.base.BaseAuditableUUID;
+import com.rahi.VehicalRental.model.entity.base.BaseUUID;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Table(name = "bookings")
 @ToString(callSuper = true)
 @Entity(name = "Booking")
-public class Booking extends BaseAuditableUUID implements Serializable {
+public class Booking extends BaseUUID implements Serializable {
 
   @ManyToOne private BranchVehicle branchVehicle;
 

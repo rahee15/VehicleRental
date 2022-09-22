@@ -18,8 +18,10 @@ public class AddBranchExecution implements CommandExecutionStrategyService {
   @Transactional
   public void executeCommand(String[] operands) {
     try {
+      // Getting branchType from command
       BranchType branchType = BranchType.valueOf(operands[1]);
 
+      // Getting all Vehicle Types and adding them in DB
       Arrays.stream(operands[2].split(","))
           .parallel()
           .forEach(
