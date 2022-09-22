@@ -8,9 +8,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class VehicalRentalApplication {
 
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(VehicalRentalApplication.class, args);
-        context.getBean(ExecutorServiceImpl.class).execute();
-    }
-
+  public static void main(String[] args) {
+    ConfigurableApplicationContext context =
+        SpringApplication.run(VehicalRentalApplication.class, args);
+    context.getBean(ExecutorServiceImpl.class).execute();
+  }
 }
