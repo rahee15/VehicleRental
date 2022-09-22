@@ -1,12 +1,12 @@
 package com.rahi.VehicalRental.model.entity;
 
 import com.rahi.VehicalRental.model.entity.base.BaseAuditableUUID;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Data
@@ -19,14 +19,11 @@ import java.io.Serializable;
 @Entity(name = "Booking")
 public class Booking extends BaseAuditableUUID implements Serializable {
 
-    @ManyToOne
-    private Branch branch;
+  @ManyToOne private BranchVehicle branchVehicle;
 
-    @Column(name = "booking_start_time")
-    private Integer bookingStartTime;
+  @Column(name = "booking_start_time")
+  private Integer bookingStartTime;
 
-    @Column(name = "booking_end_time")
-    private Integer bookingEndTime;
-
-
+  @Column(name = "booking_end_time")
+  private Integer bookingEndTime;
 }

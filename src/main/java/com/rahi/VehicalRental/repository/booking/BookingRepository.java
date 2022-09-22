@@ -1,4 +1,4 @@
-package com.rahi.VehicalRental.repository;
+package com.rahi.VehicalRental.repository.booking;
 
 import com.rahi.VehicalRental.model.entity.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface BookingRepository extends JpaRepository<Booking, UUID> {
-}
+public interface BookingRepository extends JpaRepository<Booking, UUID>, BookingRepositoryCustom {}

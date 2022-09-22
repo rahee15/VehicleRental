@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@NoArgsConstructor(access= AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UUIDUtility {
-    public static UUID generate() {
-        return UUID.randomUUID();
-    }
+  public static UUID generate() {
+    return UUID.randomUUID();
+  }
 }
