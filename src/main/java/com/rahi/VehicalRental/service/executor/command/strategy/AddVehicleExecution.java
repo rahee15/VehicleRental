@@ -14,33 +14,31 @@ import java.util.Optional;
 @Service
 public class AddVehicleExecution implements CommandExecutionStrategyService {
 
-    @Autowired
-    private BranchService branchService;
+  @Autowired private BranchService branchService;
 
-    @Autowired
-    private BranchVehicleService branchVehicleService;
+  @Autowired private BranchVehicleService branchVehicleService;
 
-    @Override
-    public void executeCommand(String[] operands) {
-        try {
-            BranchType branchType = BranchType.valueOf(operands[1]);
-            VehicleType vehicleType = VehicleType.valueOf(operands[2]);
+  @Override
+  public void executeCommand(String[] operands) {
+    try {
+      BranchType branchType = BranchType.valueOf(operands[1]);
+      VehicleType vehicleType = VehicleType.valueOf(operands[2]);
 
-            Optional<Branch> branchOptional = branchService
-                    .findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
+      Optional<Branch> branchOptional =
+          branchService.findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
 
-            if (branchOptional.isEmpty()) {
-                throw new RuntimeException("VehicleType is not supported for given branch");
-            } else {
-                branchVehicleService.createBranchVehicle(branchOptional.get(),
-                        VehicleModelType.valueOf(operands[3]),
-                        Double.parseDouble(operands[4]));
-            }
+      if (branchOptional.isEmpty()) {
+        throw new RuntimeException("VehicleType is not supported for given branch");
+      } else {
+        branchVehicleService.createBranchVehicle(
+            branchOptional.get(),
+            VehicleModelType.valueOf(operands[3]),
+            Double.parseDouble(operands[4]));
+      }
 
-            System.out.println("TRUE");
-        } catch (Exception ex) {
-            System.out.println("FALSE");
-        }
-
+      System.out.println("TRUE");
+    } catch (Exception ex) {
+      System.out.println("FALSE");
     }
+  }
 }
