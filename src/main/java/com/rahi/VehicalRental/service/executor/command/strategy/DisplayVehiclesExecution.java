@@ -17,7 +17,7 @@ public class DisplayVehiclesExecution implements CommandExecutionStrategyService
 
   @Override
   @Transactional
-  public void executeCommand(String[] operands) {
+  public String executeCommand(String[] operands) {
     try {
       BranchType branchType = BranchType.valueOf(operands[1]);
 
@@ -31,9 +31,9 @@ public class DisplayVehiclesExecution implements CommandExecutionStrategyService
       List<String> vehicleModels =
           vehicles.stream().map(Enum::toString).collect(Collectors.toList());
 
-      System.out.println(String.join(",", vehicleModels));
+      return String.join(",", vehicleModels);
     } catch (Exception ex) {
-      System.out.println(-1);
+      return "-1";
     }
   }
 }

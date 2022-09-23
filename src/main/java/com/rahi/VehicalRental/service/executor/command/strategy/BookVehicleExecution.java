@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookExecution implements CommandExecutionStrategyService {
+public class BookVehicleExecution implements CommandExecutionStrategyService {
   @Autowired private BranchService branchService;
 
   @Autowired private BranchVehicleService branchVehicleService;
@@ -25,7 +25,7 @@ public class BookExecution implements CommandExecutionStrategyService {
 
   @Override
   @Transactional
-  public void executeCommand(String[] operands) {
+  public String executeCommand(String[] operands) {
     try {
       BranchType branchType = BranchType.valueOf(operands[1]);
       VehicleType vehicleType = VehicleType.valueOf(operands[2]);
@@ -77,12 +77,12 @@ public class BookExecution implements CommandExecutionStrategyService {
               booking.getBranchVehicle().getPrice()
                   + (shouldIncreasePrice ? 0.10 * booking.getBranchVehicle().getPrice() : 0);
 
-          System.out.println(finalPrice * (bookingEndTime - bookingStartTime));
+          return String.valueOf(finalPrice * (bookingEndTime - bookingStartTime));
         }
       }
 
     } catch (Exception ex) {
-      System.out.println("-1");
+      return "-1";
     }
   }
 }
