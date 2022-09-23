@@ -19,7 +19,7 @@ public class BranchVehicleServiceImpl implements BranchVehicleService {
 
   @Override
   public BranchVehicle createBranchVehicle(
-      Branch branch, VehicleModelType vehicleModelType, Double price) {
+      Branch branch, VehicleModelType vehicleModelType, double price) {
     return branchVehicleRepository.save(
         BranchVehicle.builder()
             .branch(branch)
@@ -34,11 +34,5 @@ public class BranchVehicleServiceImpl implements BranchVehicleService {
         branch.getBranchType(), branch.getVehicleType());
   }
 
-  @Override
-  public List<BranchVehicle> findBranchVehicleByBranchBranchType(
-      BranchType branchType, List<BranchVehicle> branchVehicleList) {
-    return branchVehicleRepository.findByBranchBranchTypeAndIdNotInOrderByPriceAsc(
-        branchType,
-        branchVehicleList.parallelStream().map(BaseUUID::getId).collect(Collectors.toList()));
-  }
+
 }
