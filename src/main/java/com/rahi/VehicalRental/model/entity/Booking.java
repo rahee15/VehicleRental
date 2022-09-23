@@ -22,8 +22,8 @@ public class Booking extends BaseUUID implements Serializable {
   @ManyToOne private BranchVehicle branchVehicle;
 
   @Column(name = "booking_start_time")
-  private Integer bookingStartTime;
+  private int bookingStartTime;
 
   @Column(name = "booking_end_time")
-  private Integer bookingEndTime;
+  private int bookingEndTime;
 }

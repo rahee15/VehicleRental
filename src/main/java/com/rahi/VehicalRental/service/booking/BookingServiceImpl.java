@@ -18,7 +18,7 @@ public class BookingServiceImpl implements BookingService {
 
   @Override
   public Booking createBooking(
-      BranchVehicle branchVehicle, Integer bookingStartTime, Integer bookingEndTime) {
+      BranchVehicle branchVehicle, int bookingStartTime, int bookingEndTime) {
     return bookingRepository.save(
         Booking.builder()
             .branchVehicle(branchVehicle)
@@ -29,7 +29,7 @@ public class BookingServiceImpl implements BookingService {
 
   @Override
   public List<Booking> finaAllBookingBetweenStartAndEndHour(
-      Branch branch, Integer bookingStartTime, Integer bookingEndTime) {
+      Branch branch, int bookingStartTime, int bookingEndTime) {
     return bookingRepository.findBookingsByBranchTypeAndVehicleType(
         branch.getBranchType(), branch.getVehicleType(), bookingStartTime, bookingEndTime);
   }

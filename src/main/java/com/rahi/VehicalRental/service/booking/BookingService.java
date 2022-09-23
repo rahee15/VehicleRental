@@ -9,9 +9,9 @@ import com.rahi.VehicalRental.type.VehicleModelType;
 import java.util.List;
 
 public interface BookingService {
-    Booking createBooking(BranchVehicle branchVehicle, Integer bookingStartTime, Integer bookingEndTime);
+    Booking createBooking(BranchVehicle branchVehicle, int bookingStartTime, int bookingEndTime);
 
-    List<Booking> finaAllBookingBetweenStartAndEndHour(Branch branch, Integer bookingStartTime, Integer bookingEndTime);
+    List<Booking> finaAllBookingBetweenStartAndEndHour(Branch branch, int bookingStartTime, int bookingEndTime);
 
     List<VehicleModelType> getAvailableVehicles(BranchType branchType, int bookingStartTime, int bookingEndTime);
 }

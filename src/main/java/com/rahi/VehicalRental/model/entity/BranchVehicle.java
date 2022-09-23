@@ -22,5 +22,5 @@ public class BranchVehicle extends BaseUUID implements Serializable {
   @Enumerated(EnumType.STRING)
   private VehicleModelType vehicleModelType;
 
-  private Double price;
+  private double price;
 }
