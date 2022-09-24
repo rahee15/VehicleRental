@@ -2,7 +2,6 @@ package com.rahi.VehicalRental.service.executor;
 
 import com.rahi.VehicalRental.service.executor.command.CommandExecutorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -12,10 +11,7 @@ public class ExecutorServiceImpl {
 
   @Autowired private CommandExecutorService commandExecutorService;
 
-  @Value("${app.test.file.path}")
-  private String filePath;
-
-  public void execute() {
+  public void execute(String filePath) {
 
     try {
       // Reading file using given filePath
