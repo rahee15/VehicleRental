@@ -13,6 +13,6 @@ public class VehicalRentalApplication {
   public static void main(String[] args) throws IOException {
     ConfigurableApplicationContext context =
         SpringApplication.run(VehicalRentalApplication.class, args);
-    context.getBean(ExecutorServiceImpl.class).execute();
+    context.getBean(ExecutorServiceImpl.class).execute(args[0]);
   }
 }
