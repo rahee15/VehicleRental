@@ -30,6 +30,7 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
       BranchType branchType = BranchType.valueOf(operands[1]);
       VehicleType vehicleType = VehicleType.valueOf(operands[2]);
 
+      // Fetching Branch By Branch Type And VehicleType
       Optional<Branch> branchOptional =
           branchService.findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
 
@@ -37,6 +38,7 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
         throw new RuntimeException("VehicleType is not supported for given branch");
       } else {
 
+        // Get all available Vehicles for BranchType And VehicleType
         List<BranchVehicle> branchVehicleList =
             branchVehicleService.findBranchVehicleByBranch(branchOptional.get());
 
@@ -50,7 +52,10 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
 
         List<Booking> bookingList =
             bookingService.finaAllBookingBetweenStartAndEndHour(
-                branchOptional.get(), bookingStartTime, bookingEndTime);
+                branchOptional.get().getBranchType(),
+                branchOptional.get().getVehicleType(),
+                bookingStartTime,
+                bookingEndTime);
 
         if (bookingList.size() == branchVehicleList.size()) {
           throw new RuntimeException("No bookings available for given input");
@@ -62,7 +67,7 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
           // If 80% Cars are booked in a given branch then increase price by 10%
           List<Booking> carBookingList =
               bookingService.finaAllBookingBetweenStartAndEndHour(
-                  carBranch, bookingStartTime, bookingEndTime);
+                  branchType, VehicleType.CAR, bookingStartTime, bookingEndTime);
 
           boolean shouldIncreasePrice =
               ((double) carBookingList.size())

@@ -36,6 +36,6 @@ public class AddBranchExecutionTestImpl {
 
     verify(branchService).createBranch(BranchType.B1, VehicleType.CAR);
 
-    Assert.assertEquals(result, expected);
+    Assert.assertEquals(expected, result);
   }
 }

@@ -40,7 +40,7 @@ public class AddVehicleExecutionTestImpl {
         addVehicleExecution.executeCommand(new String[] {"ADD_VEHICLE", "B1", "CAR", "V1", "500"});
     String expected = "FALSE";
 
-    Assert.assertEquals(result, expected);
+    Assert.assertEquals(expected, result);
   }
 
   @Test
@@ -53,7 +53,7 @@ public class AddVehicleExecutionTestImpl {
         addVehicleExecution.executeCommand(new String[] {"ADD_VEHICLE", "B1", "CAR", "V1", "500"});
     String expected = "FALSE";
 
-    Assert.assertEquals(result, expected);
+    Assert.assertEquals(expected, result);
   }
 
   @Test
@@ -79,6 +79,6 @@ public class AddVehicleExecutionTestImpl {
 
     verify(branchVehicleService).createBranchVehicle(branch, VehicleModelType.V1, 500.00);
 
-    Assert.assertEquals(result, expected);
+    Assert.assertEquals(expected, result);
   }
 }
