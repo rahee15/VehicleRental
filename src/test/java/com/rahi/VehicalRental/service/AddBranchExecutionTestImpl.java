@@ -6,16 +6,13 @@ import com.rahi.VehicalRental.service.executor.command.strategy.AddBranchExecuti
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleType;
 import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class AddBranchExecutionTestImpl {
 
   @Mock BranchService branchService;
