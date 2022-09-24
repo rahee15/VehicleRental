@@ -25,8 +25,6 @@ public class ExecutorServiceImpl {
       try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
         String command;
         while ((command = br.readLine()) != null) {
-          System.out.println(command);
-
           // Executing each command
           commandExecutorService.execute(command.split(" "));
         }
