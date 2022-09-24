@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookExecution implements CommandExecutionStrategyService {
+public class BookVehicleExecution implements CommandExecutionStrategyService {
   @Autowired private BranchService branchService;
 
   @Autowired private BranchVehicleService branchVehicleService;
@@ -25,11 +25,12 @@ public class BookExecution implements CommandExecutionStrategyService {
 
   @Override
   @Transactional
-  public void executeCommand(String[] operands) {
+  public String executeCommand(String[] operands) {
     try {
       BranchType branchType = BranchType.valueOf(operands[1]);
       VehicleType vehicleType = VehicleType.valueOf(operands[2]);
 
+      // Fetching Branch By Branch Type And VehicleType
       Optional<Branch> branchOptional =
           branchService.findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
 
@@ -37,6 +38,7 @@ public class BookExecution implements CommandExecutionStrategyService {
         throw new RuntimeException("VehicleType is not supported for given branch");
       } else {
 
+        // Get all available Vehicles for BranchType And VehicleType
         List<BranchVehicle> branchVehicleList =
             branchVehicleService.findBranchVehicleByBranch(branchOptional.get());
 
@@ -50,7 +52,10 @@ public class BookExecution implements CommandExecutionStrategyService {
 
         List<Booking> bookingList =
             bookingService.finaAllBookingBetweenStartAndEndHour(
-                branchOptional.get(), bookingStartTime, bookingEndTime);
+                branchOptional.get().getBranchType(),
+                branchOptional.get().getVehicleType(),
+                bookingStartTime,
+                bookingEndTime);
 
         if (bookingList.size() == branchVehicleList.size()) {
           throw new RuntimeException("No bookings available for given input");
@@ -62,7 +67,7 @@ public class BookExecution implements CommandExecutionStrategyService {
           // If 80% Cars are booked in a given branch then increase price by 10%
           List<Booking> carBookingList =
               bookingService.finaAllBookingBetweenStartAndEndHour(
-                  carBranch, bookingStartTime, bookingEndTime);
+                  branchType, VehicleType.CAR, bookingStartTime, bookingEndTime);
 
           boolean shouldIncreasePrice =
               ((double) carBookingList.size())
@@ -77,12 +82,12 @@ public class BookExecution implements CommandExecutionStrategyService {
               booking.getBranchVehicle().getPrice()
                   + (shouldIncreasePrice ? 0.10 * booking.getBranchVehicle().getPrice() : 0);
 
-          System.out.println(finalPrice * (bookingEndTime - bookingStartTime));
+          return String.valueOf(finalPrice * (bookingEndTime - bookingStartTime));
         }
       }
 
     } catch (Exception ex) {
-      System.out.println("-1");
+      return "-1";
     }
   }
 }

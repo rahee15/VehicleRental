@@ -16,7 +16,7 @@ public class AddBranchExecution implements CommandExecutionStrategyService {
 
   @Override
   @Transactional
-  public void executeCommand(String[] operands) {
+  public String executeCommand(String[] operands) {
     try {
       // Getting branchType from command
       BranchType branchType = BranchType.valueOf(operands[1]);
@@ -28,9 +28,9 @@ public class AddBranchExecution implements CommandExecutionStrategyService {
               vehicleType ->
                   branchService.createBranch(branchType, VehicleType.valueOf(vehicleType)));
 
-      System.out.println("TRUE");
+      return "TRUE";
     } catch (Exception ex) {
-      System.out.println("FALSE");
+      return "FALSE";
     }
   }
 }

@@ -20,40 +20,8 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
   @Autowired private EntityManager entityManager;
 
   @Override
-  public List<BranchVehicle> findBookingsByBranchType(
-      BranchType branchType, Integer bookingStartTime, Integer bookingEndTime) {
-
-    QBooking qBooking = QBooking.booking;
-    JPAQuery<QBooking> query = new JPAQuery<>(entityManager);
-
-    return query
-        .from(qBooking)
-        .select(qBooking.branchVehicle)
-        .where(
-            qBooking
-                .branchVehicle
-                .branch
-                .branchType
-                .eq(branchType)
-                .and(
-                    qBooking
-                        .bookingStartTime
-                        .goe(bookingStartTime)
-                        .and(qBooking.bookingStartTime.loe(bookingEndTime))
-                        .or(
-                            qBooking
-                                .bookingEndTime
-                                .goe(bookingStartTime)
-                                .and(qBooking.bookingEndTime.loe(bookingEndTime)))))
-        .fetch();
-  }
-
-  @Override
   public List<Booking> findBookingsByBranchTypeAndVehicleType(
-      BranchType branchType,
-      VehicleType vehicleType,
-      Integer bookingStartTime,
-      Integer bookingEndTime) {
+      BranchType branchType, VehicleType vehicleType, int bookingStartTime, int bookingEndTime) {
     QBooking qBooking = QBooking.booking;
     JPAQuery<QBooking> query = new JPAQuery<>(entityManager);
 
@@ -82,7 +50,7 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
 
   @Override
   public List<VehicleModelType> getAvailableVehicles(
-      BranchType branchType, Integer bookingStartTime, Integer bookingEndTime) {
+      BranchType branchType, int bookingStartTime, int bookingEndTime) {
     QBooking qBooking = QBooking.booking;
     JPAQuery<QBooking> query = new JPAQuery<>(entityManager);
 

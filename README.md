@@ -3,7 +3,7 @@
 ##Execution Steps
 - Setup Java11 in machine
 - go to root directory of project
-- java -jar ./target/VehicalRental-0.0.1-SNAPSHOT.jar -D"app.test.file.path"=./testCase/sampleInput.txt
+- java -jar ./target/VehicalRental-0.0.1-SNAPSHOT.jar -D"app.test.file.path"=${FILE_PATH}
 
 Features:
 - Rental service has multiple branches throughout the city.

@@ -12,14 +12,14 @@ public class CommandExecutorServiceImpl implements CommandExecutorService {
 
   @Autowired private AddVehicleExecution addVehicleExecution;
 
-  @Autowired private BookExecution bookExecution;
+  @Autowired private BookVehicleExecution bookVehicleExecution;
 
   @Autowired private DisplayVehiclesExecution displayVehiclesExecution;
 
   @Override
   public void execute(String[] splitedCommand) {
     // Executing the strategy based in command
-    this.defineStrategy(splitedCommand[0]).executeCommand(splitedCommand);
+    System.out.println(this.defineStrategy(splitedCommand[0]).executeCommand(splitedCommand));
   }
 
   // Defining Strategy for which command Execution
@@ -32,7 +32,7 @@ public class CommandExecutorServiceImpl implements CommandExecutorService {
         }
       case BOOK:
         {
-          return bookExecution;
+          return bookVehicleExecution;
         }
       case ADD_BRANCH:
         {
