@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class BookVehicleExecutionTestImpl {
 
@@ -185,7 +187,7 @@ public class BookVehicleExecutionTestImpl {
 
     String result =
         bookVehicleExecution.executeCommand(new String[] {"BOOK", "B1", "BUS", "1", "5"});
-    String expected = "2400.0";
+    String expected = "2400";
 
     Assertions.assertEquals(expected, result);
   }
@@ -286,7 +288,7 @@ public class BookVehicleExecutionTestImpl {
 
     String result =
         bookVehicleExecution.executeCommand(new String[] {"BOOK", "B1", "BUS", "1", "5"});
-    String expected = "4400.0";
+    String expected = "4400";
 
     Assertions.assertEquals(expected, result);
   }
