@@ -5,14 +5,17 @@ import com.rahi.VehicalRental.service.branch.BranchService;
 import com.rahi.VehicalRental.service.executor.command.strategy.AddBranchExecution;
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleType;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class AddBranchExecutionTestImpl {
 
   @Mock BranchService branchService;
@@ -33,6 +36,6 @@ public class AddBranchExecutionTestImpl {
 
     verify(branchService).createBranch(BranchType.B1, VehicleType.CAR);
 
-    Assert.assertEquals(expected, result);
+    Assertions.assertEquals(expected, result);
   }
 }
