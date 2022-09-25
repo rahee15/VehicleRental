@@ -182,6 +182,15 @@
                         </configuration>
                     </execution>
                 </executions>
+
+                <configuration>
+                    <includes>
+                        <include>**/service/**</include>
+                        <include>com/rahi/VehicalRental/service/**</include>
+                    </includes>
+
+                </configuration>
+
             </plugin>
 
             <!--            <plugin>-->

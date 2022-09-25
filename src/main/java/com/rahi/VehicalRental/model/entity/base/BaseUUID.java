@@ -1,6 +1,5 @@
 package com.rahi.VehicalRental.model.entity.base;
 
-import com.rahi.VehicalRental.util.UUIDUtility;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +20,7 @@ public class BaseUUID implements Serializable {
   private UUID id;
 
   public BaseUUID() {
-    this.id = UUIDUtility.generate();
+    this.id = UUID.randomUUID();
+    ;
   }
 }

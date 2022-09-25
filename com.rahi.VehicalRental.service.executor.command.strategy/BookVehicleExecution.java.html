@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookVehicleExecution.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">VehicalRental</a> &gt; <a href="index.source.html" class="el_package">com.rahi.VehicalRental.service.executor.command.strategy</a> &gt; <span class="el_source">BookVehicleExecution.java</span></div><h1>BookVehicleExecution.java</h1><pre class="source lang-java linenums">package com.rahi.VehicalRental.service.executor.command.strategy;
+
+import com.rahi.VehicalRental.model.entity.Booking;
+import com.rahi.VehicalRental.model.entity.Branch;
+import com.rahi.VehicalRental.model.entity.BranchVehicle;
+import com.rahi.VehicalRental.repository.BranchRepository;
+import com.rahi.VehicalRental.repository.BranchVehicleRepository;
+import com.rahi.VehicalRental.repository.booking.BookingRepository;
+import com.rahi.VehicalRental.type.BranchType;
+import com.rahi.VehicalRental.type.VehicleType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L19">public class BookVehicleExecution implements CommandExecutionStrategyService {</span>
+  @Autowired private BranchRepository branchRepository;
+
+  @Autowired private BranchVehicleRepository branchVehicleRepository;
+
+  @Autowired private BookingRepository bookingRepository;
+
+  @Override
+  @Transactional
+  public String executeCommand(String[] operands) {
+    try {
+<span class="fc" id="L30">      BranchType branchType = BranchType.valueOf(operands[1]);</span>
+<span class="fc" id="L31">      VehicleType vehicleType = VehicleType.valueOf(operands[2]);</span>
+
+      // Fetching Branch By Branch Type And VehicleType
+<span class="fc" id="L34">      Optional&lt;Branch&gt; branchOptional =</span>
+<span class="fc" id="L35">          branchRepository.findByBranchTypeAndVehicleType(branchType, vehicleType);</span>
+
+<span class="fc bfc" id="L37" title="All 2 branches covered.">      if (branchOptional.isEmpty()) {</span>
+<span class="fc" id="L38">        throw new RuntimeException(&quot;VehicleType is not supported for given branch&quot;);</span>
+      } else {
+
+        // Get all available Vehicles for BranchType And VehicleType
+<span class="fc" id="L42">        List&lt;BranchVehicle&gt; branchVehicleList =</span>
+<span class="fc" id="L43">            branchVehicleRepository.findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(</span>
+<span class="fc" id="L44">                branchOptional.get().getBranchType(), branchOptional.get().getVehicleType());</span>
+
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (branchVehicleList.size() == 0) {</span>
+<span class="fc" id="L47">          throw new RuntimeException(&quot;Given VehicleType is not available in given branch&quot;);</span>
+        }
+
+<span class="fc" id="L50">        int bookingStartTime = Integer.parseInt(operands[3]);</span>
+
+<span class="fc" id="L52">        int bookingEndTime = Integer.parseInt(operands[4]);</span>
+
+<span class="fc" id="L54">        List&lt;Booking&gt; bookingList =</span>
+<span class="fc" id="L55">            bookingRepository.findBookingsByBranchTypeAndVehicleType(</span>
+<span class="fc" id="L56">                branchOptional.get().getBranchType(),</span>
+<span class="fc" id="L57">                branchOptional.get().getVehicleType(),</span>
+                bookingStartTime,
+                bookingEndTime);
+
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (bookingList.size() == branchVehicleList.size()) {</span>
+<span class="fc" id="L62">          throw new RuntimeException(&quot;No bookings available for given input&quot;);</span>
+        } else {
+
+          Branch carBranch =
+<span class="fc" id="L66">              Branch.builder().branchType(branchType).vehicleType(VehicleType.CAR).build();</span>
+
+          // If 80% Cars are booked in a given branch then increase price by 10%
+<span class="fc" id="L69">          List&lt;Booking&gt; carBookingList =</span>
+<span class="fc" id="L70">              bookingRepository.findBookingsByBranchTypeAndVehicleType(</span>
+                  branchType, VehicleType.CAR, bookingStartTime, bookingEndTime);
+
+          // Checks if 80% Cars booked or not
+<span class="fc" id="L74">          boolean shouldIncreasePrice =</span>
+<span class="fc" id="L75">              ((double) carBookingList.size())</span>
+                  &gt;= ((0.80
+                      * (double)
+                          branchVehicleRepository
+<span class="fc" id="L79">                              .findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(</span>
+<span class="fc" id="L80">                                  carBranch.getBranchType(), carBranch.getVehicleType())</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">                              .size()));</span>
+
+<span class="fc" id="L83">          Booking booking =</span>
+<span class="fc" id="L84">              bookingRepository.save(</span>
+<span class="fc" id="L85">                  Booking.builder()</span>
+<span class="fc" id="L86">                      .branchVehicle(branchVehicleList.get(bookingList.size()))</span>
+<span class="fc" id="L87">                      .bookingStartTime(bookingStartTime)</span>
+<span class="fc" id="L88">                      .bookingEndTime(bookingEndTime)</span>
+<span class="fc" id="L89">                      .build());</span>
+
+<span class="fc" id="L91">          int finalPrice =</span>
+              (int)
+<span class="fc" id="L93">                  (branchVehicleList.get(bookingList.size()).getPrice()</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">                      + (shouldIncreasePrice ? 0.10 * branchVehicleList.get(bookingList.size()).getPrice() : 0));</span>
+
+<span class="fc" id="L96">          return String.valueOf(finalPrice * (bookingEndTime - bookingStartTime));</span>
+        }
+      }
+
+<span class="fc" id="L100">    } catch (Exception ex) {</span>
+<span class="fc" id="L101">      return &quot;-1&quot;;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

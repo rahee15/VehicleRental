@@ -1,6 +1,6 @@
 package com.rahi.VehicalRental.service.executor.command.strategy;
 
-import com.rahi.VehicalRental.service.booking.BookingService;
+import com.rahi.VehicalRental.repository.booking.BookingRepository;
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleModelType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class DisplayVehiclesExecution implements CommandExecutionStrategyService {
 
-  @Autowired private BookingService bookingService;
+  @Autowired private BookingRepository bookingRepository;
 
   @Override
   @Transactional
@@ -26,7 +26,7 @@ public class DisplayVehiclesExecution implements CommandExecutionStrategyService
       int bookingEndTime = Integer.parseInt(operands[3]);
 
       List<VehicleModelType> vehicles =
-          bookingService.getAvailableVehicles(branchType, bookingStartTime, bookingEndTime);
+          bookingRepository.getAvailableVehicles(branchType, bookingStartTime, bookingEndTime);
 
       List<String> vehicleModels =
           vehicles.stream().map(Enum::toString).collect(Collectors.toList());
