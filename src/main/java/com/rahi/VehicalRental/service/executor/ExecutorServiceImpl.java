@@ -27,7 +27,7 @@ public class ExecutorServiceImpl {
       }
 
     } catch (IOException e) {
-      throw new RuntimeException("Issue in reading input file");
+      System.out.println("false");
     }
   }
 }
