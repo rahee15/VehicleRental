@@ -78,9 +78,9 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
               bookingService.createBooking(
                   branchVehicleList.get(bookingList.size()), bookingStartTime, bookingEndTime);
 
-          double finalPrice =
-              booking.getBranchVehicle().getPrice()
-                  + (shouldIncreasePrice ? 0.10 * booking.getBranchVehicle().getPrice() : 0);
+          int finalPrice =
+                  (int) (booking.getBranchVehicle().getPrice()
+                                    + (shouldIncreasePrice ? 0.10 * booking.getBranchVehicle().getPrice() : 0));
 
           return String.valueOf(finalPrice * (bookingEndTime - bookingStartTime));
         }
