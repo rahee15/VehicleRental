@@ -3,9 +3,9 @@ package com.rahi.VehicalRental.service.executor.command.strategy;
 import com.rahi.VehicalRental.model.entity.Booking;
 import com.rahi.VehicalRental.model.entity.Branch;
 import com.rahi.VehicalRental.model.entity.BranchVehicle;
-import com.rahi.VehicalRental.service.booking.BookingService;
-import com.rahi.VehicalRental.service.branch.BranchService;
-import com.rahi.VehicalRental.service.branch.vehicle.BranchVehicleService;
+import com.rahi.VehicalRental.repository.BranchRepository;
+import com.rahi.VehicalRental.repository.BranchVehicleRepository;
+import com.rahi.VehicalRental.repository.booking.BookingRepository;
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,11 @@ import java.util.Optional;
 
 @Service
 public class BookVehicleExecution implements CommandExecutionStrategyService {
-  @Autowired private BranchService branchService;
+  @Autowired private BranchRepository branchRepository;
 
-  @Autowired private BranchVehicleService branchVehicleService;
+  @Autowired private BranchVehicleRepository branchVehicleRepository;
 
-  @Autowired private BookingService bookingService;
+  @Autowired private BookingRepository bookingRepository;
 
   @Override
   @Transactional
@@ -32,7 +32,7 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
 
       // Fetching Branch By Branch Type And VehicleType
       Optional<Branch> branchOptional =
-          branchService.findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
+          branchRepository.findByBranchTypeAndVehicleType(branchType, vehicleType);
 
       if (branchOptional.isEmpty()) {
         throw new RuntimeException("VehicleType is not supported for given branch");
@@ -40,7 +40,8 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
 
         // Get all available Vehicles for BranchType And VehicleType
         List<BranchVehicle> branchVehicleList =
-            branchVehicleService.findBranchVehicleByBranch(branchOptional.get());
+            branchVehicleRepository.findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(
+                branchOptional.get().getBranchType(), branchOptional.get().getVehicleType());
 
         if (branchVehicleList.size() == 0) {
           throw new RuntimeException("Given VehicleType is not available in given branch");
@@ -51,7 +52,7 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
         int bookingEndTime = Integer.parseInt(operands[4]);
 
         List<Booking> bookingList =
-            bookingService.finaAllBookingBetweenStartAndEndHour(
+            bookingRepository.findBookingsByBranchTypeAndVehicleType(
                 branchOptional.get().getBranchType(),
                 branchOptional.get().getVehicleType(),
                 bookingStartTime,
@@ -66,21 +67,31 @@ public class BookVehicleExecution implements CommandExecutionStrategyService {
 
           // If 80% Cars are booked in a given branch then increase price by 10%
           List<Booking> carBookingList =
-              bookingService.finaAllBookingBetweenStartAndEndHour(
+              bookingRepository.findBookingsByBranchTypeAndVehicleType(
                   branchType, VehicleType.CAR, bookingStartTime, bookingEndTime);
 
+          // Checks if 80% Cars booked or not
           boolean shouldIncreasePrice =
               ((double) carBookingList.size())
                   >= ((0.80
-                      * (double) branchVehicleService.findBranchVehicleByBranch(carBranch).size()));
+                      * (double)
+                          branchVehicleRepository
+                              .findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(
+                                  carBranch.getBranchType(), carBranch.getVehicleType())
+                              .size()));
 
           Booking booking =
-              bookingService.createBooking(
-                  branchVehicleList.get(bookingList.size()), bookingStartTime, bookingEndTime);
+              bookingRepository.save(
+                  Booking.builder()
+                      .branchVehicle(branchVehicleList.get(bookingList.size()))
+                      .bookingStartTime(bookingStartTime)
+                      .bookingEndTime(bookingEndTime)
+                      .build());
 
           int finalPrice =
-                  (int) (booking.getBranchVehicle().getPrice()
-                                    + (shouldIncreasePrice ? 0.10 * booking.getBranchVehicle().getPrice() : 0));
+              (int)
+                  (branchVehicleList.get(bookingList.size()).getPrice()
+                      + (shouldIncreasePrice ? 0.10 * branchVehicleList.get(bookingList.size()).getPrice() : 0));
 
           return String.valueOf(finalPrice * (bookingEndTime - bookingStartTime));
         }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookingServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">VehicalRental</a> &gt; <a href="index.source.html" class="el_package">com.rahi.VehicalRental.service.booking</a> &gt; <span class="el_source">BookingServiceImpl.java</span></div><h1>BookingServiceImpl.java</h1><pre class="source lang-java linenums">package com.rahi.VehicalRental.service.booking;
+
+import com.rahi.VehicalRental.model.entity.Booking;
+import com.rahi.VehicalRental.model.entity.BranchVehicle;
+import com.rahi.VehicalRental.repository.booking.BookingRepository;
+import com.rahi.VehicalRental.type.BranchType;
+import com.rahi.VehicalRental.type.VehicleModelType;
+import com.rahi.VehicalRental.type.VehicleType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+<span class="fc" id="L15">public class BookingServiceImpl implements BookingService {</span>
+
+  @Autowired private BookingRepository bookingRepository;
+
+  @Override
+  public Booking createBooking(
+      BranchVehicle branchVehicle, int bookingStartTime, int bookingEndTime) {
+<span class="nc" id="L22">    return bookingRepository.save(</span>
+<span class="nc" id="L23">        Booking.builder()</span>
+<span class="nc" id="L24">            .branchVehicle(branchVehicle)</span>
+<span class="nc" id="L25">            .bookingStartTime(bookingStartTime)</span>
+<span class="nc" id="L26">            .bookingEndTime(bookingEndTime)</span>
+<span class="nc" id="L27">            .build());</span>
+  }
+
+  @Override
+  public List&lt;Booking&gt; finaAllBookingBetweenStartAndEndHour(
+      BranchType branchType, VehicleType vehicleType, int bookingStartTime, int bookingEndTime) {
+<span class="nc" id="L33">    return bookingRepository.findBookingsByBranchTypeAndVehicleType(</span>
+        branchType, vehicleType, bookingStartTime, bookingEndTime);
+  }
+
+  @Override
+  public List&lt;VehicleModelType&gt; getAvailableVehicles(
+      BranchType branchType, int bookingStartTime, int bookingEndTime) {
+<span class="nc" id="L40">    return bookingRepository.getAvailableVehicles(branchType, bookingStartTime, bookingEndTime);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

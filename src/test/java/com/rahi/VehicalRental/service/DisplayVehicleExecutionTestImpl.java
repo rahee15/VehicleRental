@@ -1,6 +1,6 @@
 package com.rahi.VehicalRental.service;
 
-import com.rahi.VehicalRental.service.booking.BookingService;
+import com.rahi.VehicalRental.repository.booking.BookingRepository;
 import com.rahi.VehicalRental.service.executor.command.strategy.DisplayVehiclesExecution;
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleModelType;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class DisplayVehicleExecutionTestImpl {
 
-  @Mock BookingService bookingService;
+  @Mock BookingRepository bookingRepository;
 
   @InjectMocks DisplayVehiclesExecution displayVehiclesExecution = new DisplayVehiclesExecution();
 
@@ -32,13 +32,24 @@ public class DisplayVehicleExecutionTestImpl {
     List<VehicleModelType> vehicleModelTypeList =
         Arrays.asList(VehicleModelType.V1, VehicleModelType.V2, VehicleModelType.V3);
 
-    when(bookingService.getAvailableVehicles(eq(BranchType.B1), eq(1), eq(5)))
+    when(bookingRepository.getAvailableVehicles(eq(BranchType.B1), eq(1), eq(5)))
         .thenReturn(vehicleModelTypeList);
 
     String result =
         displayVehiclesExecution.executeCommand(new String[] {"DISPLAY_VEHICLES", "B1", "1", "5"});
 
     String expected = "V1,V2,V3";
+
+    Assertions.assertEquals(expected, result);
+  }
+
+  @Test
+  public void addInvalidBranchName() {
+
+    String result =
+        displayVehiclesExecution.executeCommand(new String[] {"DISPLAY_VEHICLES", "V1", "1", "5"});
+
+    String expected = "-1";
 
     Assertions.assertEquals(expected, result);
   }

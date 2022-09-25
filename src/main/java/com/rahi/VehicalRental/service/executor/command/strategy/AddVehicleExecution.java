@@ -1,8 +1,9 @@
 package com.rahi.VehicalRental.service.executor.command.strategy;
 
 import com.rahi.VehicalRental.model.entity.Branch;
-import com.rahi.VehicalRental.service.branch.BranchService;
-import com.rahi.VehicalRental.service.branch.vehicle.BranchVehicleService;
+import com.rahi.VehicalRental.model.entity.BranchVehicle;
+import com.rahi.VehicalRental.repository.BranchRepository;
+import com.rahi.VehicalRental.repository.BranchVehicleRepository;
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleModelType;
 import com.rahi.VehicalRental.type.VehicleType;
@@ -15,9 +16,9 @@ import java.util.Optional;
 @Service
 public class AddVehicleExecution implements CommandExecutionStrategyService {
 
-  @Autowired private BranchService branchService;
+  @Autowired private BranchRepository branchRepository;
 
-  @Autowired private BranchVehicleService branchVehicleService;
+  @Autowired private BranchVehicleRepository branchVehicleRepository;
 
   @Override
   @Transactional
@@ -29,7 +30,7 @@ public class AddVehicleExecution implements CommandExecutionStrategyService {
 
       // Getting branch by branchType And VehicleType
       Optional<Branch> branchOptional =
-          branchService.findBranchByBranchTypeAndVehicleType(branchType, vehicleType);
+          branchRepository.findByBranchTypeAndVehicleType(branchType, vehicleType);
 
       // Checking if branch exists or not
       if (branchOptional.isEmpty()) {
@@ -37,10 +38,12 @@ public class AddVehicleExecution implements CommandExecutionStrategyService {
       } else {
 
         // Adding entry in BranchVehicle Table
-        branchVehicleService.createBranchVehicle(
-            branchOptional.get(),
-            VehicleModelType.valueOf(operands[3]),
-            Double.parseDouble(operands[4]));
+        branchVehicleRepository.save(
+            BranchVehicle.builder()
+                .branch(branchOptional.get())
+                .vehicleModelType(VehicleModelType.valueOf(operands[3]))
+                .price(Double.parseDouble(operands[4]))
+                .build());
       }
 
       return "TRUE";

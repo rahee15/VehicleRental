@@ -3,9 +3,9 @@ package com.rahi.VehicalRental.service;
 import com.rahi.VehicalRental.model.entity.Booking;
 import com.rahi.VehicalRental.model.entity.Branch;
 import com.rahi.VehicalRental.model.entity.BranchVehicle;
-import com.rahi.VehicalRental.service.booking.BookingService;
-import com.rahi.VehicalRental.service.branch.BranchService;
-import com.rahi.VehicalRental.service.branch.vehicle.BranchVehicleService;
+import com.rahi.VehicalRental.repository.BranchRepository;
+import com.rahi.VehicalRental.repository.BranchVehicleRepository;
+import com.rahi.VehicalRental.repository.booking.BookingRepository;
 import com.rahi.VehicalRental.service.executor.command.strategy.BookVehicleExecution;
 import com.rahi.VehicalRental.type.BranchType;
 import com.rahi.VehicalRental.type.VehicleModelType;
@@ -31,17 +31,17 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class BookVehicleExecutionTestImpl {
 
-  @Mock BranchService branchService;
+  @Mock BranchRepository branchRepository;
 
-  @Mock BranchVehicleService branchVehicleService;
+  @Mock BranchVehicleRepository branchVehicleRepository;
 
-  @Mock BookingService bookingService;
+  @Mock BookingRepository bookingRepository;
 
   @InjectMocks BookVehicleExecution bookVehicleExecution = new BookVehicleExecution();
 
   @Test
   public void bookVehicleWithNonExistingBranchType() {
-    when(branchService.findBranchByBranchTypeAndVehicleType(
+    when(branchRepository.findByBranchTypeAndVehicleType(
             any(BranchType.class), any(VehicleType.class)))
         .thenReturn(Optional.empty());
 
@@ -54,7 +54,7 @@ public class BookVehicleExecutionTestImpl {
 
   @Test
   public void bookVehicleWithNonExistingVehicleType() {
-    when(branchService.findBranchByBranchTypeAndVehicleType(
+    when(branchRepository.findByBranchTypeAndVehicleType(
             any(BranchType.class), any(VehicleType.class)))
         .thenReturn(Optional.empty());
 
@@ -67,13 +67,14 @@ public class BookVehicleExecutionTestImpl {
 
   @Test
   public void bookVehicleWithNonExistingBranchVehicle() {
-    when(branchService.findBranchByBranchTypeAndVehicleType(
+    when(branchRepository.findByBranchTypeAndVehicleType(
             any(BranchType.class), any(VehicleType.class)))
         .thenReturn(
             Optional.of(
                 Branch.builder().branchType(BranchType.B1).vehicleType(VehicleType.CAR).build()));
 
-    when(branchVehicleService.findBranchVehicleByBranch(any(Branch.class)))
+    when(branchVehicleRepository.findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(
+            any(BranchType.class), any(VehicleType.class)))
         .thenReturn(Collections.emptyList());
 
     String result =
@@ -114,14 +115,15 @@ public class BookVehicleExecutionTestImpl {
                 .bookingEndTime(4)
                 .build());
 
-    when(branchService.findBranchByBranchTypeAndVehicleType(
+    when(branchRepository.findByBranchTypeAndVehicleType(
             any(BranchType.class), any(VehicleType.class)))
         .thenReturn(Optional.of(branch));
 
-    when(branchVehicleService.findBranchVehicleByBranch(any(Branch.class)))
+    when(branchVehicleRepository.findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(
+            any(BranchType.class), any(VehicleType.class)))
         .thenReturn(branchVehicleList);
 
-    when(bookingService.finaAllBookingBetweenStartAndEndHour(
+    when(bookingRepository.findBookingsByBranchTypeAndVehicleType(
             any(BranchType.class), any(VehicleType.class), eq(1), eq(5)))
         .thenReturn(bookingList);
 
@@ -158,32 +160,24 @@ public class BookVehicleExecutionTestImpl {
                 .bookingEndTime(5)
                 .build());
 
-    when(branchService.findBranchByBranchTypeAndVehicleType(
+    when(branchRepository.findByBranchTypeAndVehicleType(
             any(BranchType.class), any(VehicleType.class)))
         .thenReturn(Optional.of(branch));
 
-    when(branchVehicleService.findBranchVehicleByBranch(any(Branch.class)))
+    when(branchVehicleRepository.findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(
+            any(BranchType.class), any(VehicleType.class)))
         .thenReturn(branchVehicleList);
 
-    when(bookingService.finaAllBookingBetweenStartAndEndHour(
+    when(bookingRepository.findBookingsByBranchTypeAndVehicleType(
             eq(branch.getBranchType()),
             eq(branch.getVehicleType()),
             any(Integer.class),
             any(Integer.class)))
         .thenReturn(bookingList);
 
-    when(bookingService.finaAllBookingBetweenStartAndEndHour(
+    when(bookingRepository.findBookingsByBranchTypeAndVehicleType(
             eq(BranchType.B1), eq(VehicleType.CAR), any(Integer.class), any(Integer.class)))
         .thenReturn(Collections.emptyList());
-
-    when(bookingService.createBooking(
-            any(BranchVehicle.class), any(Integer.class), any(Integer.class)))
-        .thenReturn(
-            Booking.builder()
-                .branchVehicle(branchVehicleList.get(1))
-                .bookingStartTime(1)
-                .bookingEndTime(5)
-                .build());
 
     String result =
         bookVehicleExecution.executeCommand(new String[] {"BOOK", "B1", "BUS", "1", "5"});
@@ -262,29 +256,21 @@ public class BookVehicleExecutionTestImpl {
                 .bookingEndTime(5)
                 .build());
 
-    when(branchService.findBranchByBranchTypeAndVehicleType(
+    when(branchRepository.findByBranchTypeAndVehicleType(
             any(BranchType.class), any(VehicleType.class)))
         .thenReturn(Optional.of(branch));
 
-    when(branchVehicleService.findBranchVehicleByBranch(any(Branch.class)))
+    when(branchVehicleRepository.findByBranchBranchTypeAndBranchVehicleTypeOrderByPriceAsc(
+            any(BranchType.class), any(VehicleType.class)))
         .thenReturn(Arrays.asList(branchVehicleList.get(5)));
 
-    when(bookingService.finaAllBookingBetweenStartAndEndHour(
+    when(bookingRepository.findBookingsByBranchTypeAndVehicleType(
             eq(BranchType.B1), eq(VehicleType.BUS), any(Integer.class), any(Integer.class)))
         .thenReturn(bookingList);
 
-    when(bookingService.finaAllBookingBetweenStartAndEndHour(
+    when(bookingRepository.findBookingsByBranchTypeAndVehicleType(
             eq(BranchType.B1), eq(VehicleType.CAR), any(Integer.class), any(Integer.class)))
         .thenReturn(carBookingList);
-
-    when(bookingService.createBooking(
-            any(BranchVehicle.class), any(Integer.class), any(Integer.class)))
-        .thenReturn(
-            Booking.builder()
-                .branchVehicle(branchVehicleList.get(5))
-                .bookingStartTime(1)
-                .bookingEndTime(5)
-                .build());
 
     String result =
         bookVehicleExecution.executeCommand(new String[] {"BOOK", "B1", "BUS", "1", "5"});

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddVehicleExecution.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">VehicalRental</a> &gt; <a href="index.source.html" class="el_package">com.rahi.VehicalRental.service.executor.command.strategy</a> &gt; <span class="el_source">AddVehicleExecution.java</span></div><h1>AddVehicleExecution.java</h1><pre class="source lang-java linenums">package com.rahi.VehicalRental.service.executor.command.strategy;
+
+import com.rahi.VehicalRental.model.entity.Branch;
+import com.rahi.VehicalRental.model.entity.BranchVehicle;
+import com.rahi.VehicalRental.repository.BranchRepository;
+import com.rahi.VehicalRental.repository.BranchVehicleRepository;
+import com.rahi.VehicalRental.type.BranchType;
+import com.rahi.VehicalRental.type.VehicleModelType;
+import com.rahi.VehicalRental.type.VehicleType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L17">public class AddVehicleExecution implements CommandExecutionStrategyService {</span>
+
+  @Autowired private BranchRepository branchRepository;
+
+  @Autowired private BranchVehicleRepository branchVehicleRepository;
+
+  @Override
+  @Transactional
+  public String executeCommand(String[] operands) {
+    try {
+      // Fetching BranchType And VehicleType from command
+<span class="fc" id="L28">      BranchType branchType = BranchType.valueOf(operands[1]);</span>
+<span class="fc" id="L29">      VehicleType vehicleType = VehicleType.valueOf(operands[2]);</span>
+
+      // Getting branch by branchType And VehicleType
+<span class="fc" id="L32">      Optional&lt;Branch&gt; branchOptional =</span>
+<span class="fc" id="L33">          branchRepository.findByBranchTypeAndVehicleType(branchType, vehicleType);</span>
+
+      // Checking if branch exists or not
+<span class="fc bfc" id="L36" title="All 2 branches covered.">      if (branchOptional.isEmpty()) {</span>
+<span class="fc" id="L37">        throw new RuntimeException(&quot;VehicleType is not supported for given branch&quot;);</span>
+      } else {
+
+        // Adding entry in BranchVehicle Table
+<span class="fc" id="L41">        branchVehicleRepository.save(</span>
+<span class="fc" id="L42">            BranchVehicle.builder()</span>
+<span class="fc" id="L43">                .branch(branchOptional.get())</span>
+<span class="fc" id="L44">                .vehicleModelType(VehicleModelType.valueOf(operands[3]))</span>
+<span class="fc" id="L45">                .price(Double.parseDouble(operands[4]))</span>
+<span class="fc" id="L46">                .build());</span>
+      }
+
+<span class="fc" id="L49">      return &quot;TRUE&quot;;</span>
+<span class="fc" id="L50">    } catch (Exception ex) {</span>
+<span class="fc" id="L51">      return &quot;FALSE&quot;;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
